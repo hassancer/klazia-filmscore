@@ -1,0 +1,182 @@
+# ============================================================ 
+# KLAZIA FILMSCORE - ARCHIVOS EXCLUIDOS DE GIT
+# ============================================================
+# ------------------------------------------------------------
+# Framework de trabajo y documentación interna del proceso
+# ------------------------------------------------------------
+/Framework/
+/framework/
+# ------------------------------------------------------------
+# Dependencias de Node.js
+# ------------------------------------------------------------
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+# ------------------------------------------------------------
+# Variables de entorno y secretos
+# ------------------------------------------------------------
+.env
+.env.*
+frontend/.env
+frontend/.env.*
+backend/.env
+backend/.env.*
+# Permitir únicamente archivos de ejemplo sin secretos
+!.env.example
+!frontend/.env.example
+!backend/.env.example
+# ------------------------------------------------------------
+# Bases de datos SQLite
+# ------------------------------------------------------------
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.db-*
+*.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-shm
+*.sqlite3-wal
+*.sqlite-*
+# Contenido local de la carpeta de datos
+/backend/data/*
+# Permitir archivo vacío para conservar la carpeta, si existe
+!/backend/data/.gitkeep
+# ------------------------------------------------------------
+# Copias de seguridad
+# ------------------------------------------------------------
+*backup*.db
+*backup*.sqlite
+*backup*.sqlite3
+*.bak
+*.backup
+/backups/
+/backup/
+# ------------------------------------------------------------
+# Archivos compilados o generados
+# ------------------------------------------------------------
+dist/
+build/
+coverage/
+.cache/
+.vite/
+frontend/dist/
+frontend/build/
+frontend/coverage/
+backend/dist/
+backend/build/
+backend/coverage/
+# ------------------------------------------------------------
+# Logs y archivos temporales
+# ------------------------------------------------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+# ------------------------------------------------------------
+# Documentos Word y archivos temporales de Microsoft Office
+# ------------------------------------------------------------
+*.doc
+*.docx
+~$*.doc
+~$*.docx
+# ------------------------------------------------------------
+# Informes PDF generados localmente
+# ------------------------------------------------------------
+/docs/*.pdf
+/docs/**/*.pdf
+# ------------------------------------------------------------
+# Entregables y documentos internos generados
+# ------------------------------------------------------------
+/docs/informe-final-klazia-filmscore.docx
+/docs/informe-final-klazia-filmscore.pdf
+/docs/guia-tecnica-para-sustentacion.md
+/docs/guion-sustentacion-klazia.md
+/docs/estrategia-de-commits.md
+/docs/capturas-informe/
+# ------------------------------------------------------------
+# Capturas públicas que sí deben aparecer en el README
+# ------------------------------------------------------------
+!/docs/capturas/
+!/docs/capturas/**
+# ------------------------------------------------------------
+# Archivos del sistema operativo
+# ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+ehthumbs.db
+# ------------------------------------------------------------
+# Visual Studio Code
+# ------------------------------------------------------------
+.vscode/
+# Si después necesitas compartir configuraciones específicas
+# de VS Code, cambia la regla anterior por exclusiones selectivas.
+# ------------------------------------------------------------
+# Visual Studio
+# ------------------------------------------------------------
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+# ------------------------------------------------------------
+# IntelliJ IDEA y otros editores
+# ------------------------------------------------------------
+.idea/
+*.iml
+# ------------------------------------------------------------
+# Archivos de pruebas locales
+# ------------------------------------------------------------
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/screenshots/
+/screenshots-test/
+/tmp/
+/temp/
+# ------------------------------------------------------------
+# Certificados y llaves privadas
+# ------------------------------------------------------------
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+# ------------------------------------------------------------
+# Paquetes comprimidos y entregables locales
+# ------------------------------------------------------------
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+# ============================================================
+# ARCHIVOS QUE SÍ DEBEN VERSIONARSE
+# ============================================================
+# No deben agregarse reglas para ignorar:
+#
+# README.md
+# package.json
+# package-lock.json
+# .env.example
+# frontend/src/
+# backend/src/
+# backend/src/database/migrations/
+# docs/capturas/
+# Archivos de pruebas
+# ============================================================
