@@ -15,6 +15,7 @@ en internet.**
 - [Limitaciones actuales](#limitaciones-actuales)
 - [Tecnologías](#tecnologías)
 - [Requisitos previos](#requisitos-previos)
+- [Crear una cuenta y obtener el token de TMDB](#crear-una-cuenta-y-obtener-el-token-de-tmdb)
 - [Instalación](#instalación)
 - [Variables de entorno](#variables-de-entorno)
 - [Base de datos](#base-de-datos)
@@ -39,22 +40,20 @@ La aplicación se ejecuta en el computador local del usuario.
 
 ## Funcionalidades implementadas
 
-- Registro de cuenta, inicio y cierre de sesión.
-- Búsqueda de películas por título y consulta del detalle, incluida la
-  calificación que entrega TMDB.
-- Favoritos privados: guardar, listar, consultar y retirar películas de la
-  lista de la cuenta autenticada.
-- Aportes personales: crear un aporte por usuario y película, asignar una
-  calificación entera de 1 a 5 y escribir una reseña de 10 a 1.000 caracteres.
-- Los aportes se crean privados por defecto. Su autor puede consultarlos,
-  editarlos, cambiar su visibilidad y eliminarlos.
-- La vista de detalle puede mostrar aportes públicos. La vista «Mis aportes»
-  presenta los aportes de la sesión actual.
-- Estados de carga, listas vacías, errores y reintentos explícitos en los
-  flujos principales.
-- CSS con ajustes responsive para navegación, formularios, tarjetas y detalle.
-  La existencia de esos estilos no implica una certificación de accesibilidad
-  ni una validación formal en todos los tamaños de pantalla.
+- Sin iniciar sesión, puedes buscar películas por título, ver sus detalles y
+  consultar los aportes públicos de otros usuarios.
+- Puedes crear una cuenta e iniciar sesión. Después de registrarte, debes
+  entrar manualmente en «Iniciar sesión»; el registro no inicia la sesión
+  automáticamente.
+- Con una sesión iniciada, puedes guardar películas en Favoritos, ver tu lista
+  y quitar películas.
+- También puedes crear un aporte por película, con una calificación entera de
+  1 a 5 y una reseña de 10 a 1.000 caracteres. Los aportes son privados al
+  crearlos, pero puedes editarlos, hacerlos públicos, volverlos privados o
+  eliminarlos desde «Mis aportes».
+- La aplicación muestra estados de carga, listas vacías y mensajes de error
+  con opciones de reintento en los flujos principales.
+- Los estilos se adaptan a distintos tamaños de pantalla.
 
 ## Limitaciones actuales
 
@@ -65,12 +64,10 @@ La aplicación se ejecuta en el computador local del usuario.
   se pierden al reiniciar el backend.
 - No hay roles de administrador, moderación ni reportes.
 - No hay recuperación ni eliminación de cuentas.
-- La búsqueda es por título y no incluye filtros adicionales.
+- La búsqueda acepta el título de la película; no incluye filtros por género,
+  actor u otros criterios.
 
 ## Tecnologías
-
-Las versiones indicadas provienen de los manifiestos del proyecto o del
-entorno local verificado durante la preparación de este README.
 
 | Área                 | Tecnología                                                                         |
 | -------------------- | ---------------------------------------------------------------------------------- |
@@ -88,34 +85,71 @@ entorno local verificado durante la preparación de este README.
 - Windows 11 de 64 bits, el entorno local usado para esta documentación.
   Otros sistemas operativos no se verificaron aquí.
 - Node.js 24.13.0 y npm 11.8.0 se detectaron en el entorno de trabajo.
-- Git para clonar el repositorio cuando se publique su URL.
+- Git para clonar el [repositorio de Klazia FilmScore en GitHub](https://github.com/hassancer/klazia-filmscore).
 - Una cuenta de TMDB y su **Read Access Token** para habilitar las consultas
   del catálogo.
 - Google Chrome o Microsoft Edge para la demostración local.
 
+## Crear una cuenta y obtener el token de TMDB
+
+Klazia FilmScore utiliza el **API Read Access Token** de TMDB. Sigue estos
+pasos en un navegador de escritorio; TMDB indica que el registro para el API
+no está optimizado para dispositivos móviles:
+
+1. Crea una cuenta desde [Sign Up de TMDB](https://www.themoviedb.org/signup)
+   y completa los pasos que indique el sitio.
+2. Inicia sesión y abre la sección [API Settings de tu cuenta](https://www.themoviedb.org/settings/api).
+3. Sigue el proceso de registro de API que muestra TMDB y acepta sus
+   [términos de uso](https://www.themoviedb.org/documentation/api/terms-of-use).
+   Describe el uso del proyecto de manera precisa como una aplicación académica
+   local.
+4. En la configuración de la API, copia el **API Read Access Token**. Es el
+   token de lectura que usa este proyecto.
+5. Sigue los pasos de [Instalación](#instalación). Allí crearás el archivo
+   `backend/.env` y podrás pegar el token en `TMDB_ACCESS_TOKEN`.
+
+Si cambias el token después de iniciar el backend, reinícialo para que lea el
+nuevo valor.
+
+No compartas el token en el README, GitHub, capturas, registros, mensajes ni
+código del frontend. El archivo `backend/.env` es local y está excluido por
+`.gitignore`; no lo subas al repositorio. Para más información, consulta la
+[guía oficial de inicio de TMDB](https://developer.themoviedb.org/docs/getting-started)
+y su [documentación de autenticación de aplicaciones](https://developer.themoviedb.org/docs/authentication-application).
+
 ## Instalación
 
-En PowerShell:
+Abre PowerShell en la carpeta donde quieras guardar el proyecto. El siguiente
+comando descargará el repositorio en una carpeta llamada `klazia-filmscore`:
 
 ```powershell
 git clone https://github.com/hassancer/klazia-filmscore.git
-Set-Location FilmScore
-Set-Location backend
-npm install
-Copy-Item .env.example .env
+Set-Location klazia-filmscore
 ```
 
-Edita `backend/.env` con valores locales seguros como se explica en
-[Variables de entorno](#variables-de-entorno). Después instala las dependencias
-del frontend:
+`Set-Location` sirve para entrar en una carpeta desde PowerShell. A partir de
+este punto, `klazia-filmscore` es la carpeta principal del proyecto.
+
+Entra en `backend`, instala sus dependencias y crea el archivo de configuración
+local. El último comando no reemplaza el archivo si ya existe:
+
+```powershell
+Set-Location backend
+npm install
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+```
+
+Antes de continuar, abre `backend/.env` y configura `SESSION_SECRET` y
+`TMDB_ACCESS_TOKEN` siguiendo las instrucciones de
+[Variables de entorno](#variables-de-entorno). Después, desde la misma terminal
+que está en `backend`, instala las dependencias del frontend:
 
 ```powershell
 Set-Location ..\frontend
 npm install
 ```
 
-La base de datos y su esquema se preparan con el comando documentado en
-[Base de datos](#base-de-datos).
+La base de datos se prepara en el paso de [Ejecución local](#ejecución-local).
 
 ## Variables de entorno
 
@@ -134,6 +168,21 @@ PORT=3000
 DATABASE_PATH=backend/data/klazia.db
 ```
 
+Para configurar los dos valores necesarios:
+
+1. Genera un secreto aleatorio ejecutando este comando en PowerShell:
+
+   ```powershell
+   node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+   ```
+
+2. Copia el resultado en `backend/.env`, después de `SESSION_SECRET=`.
+3. En el mismo archivo, pega el token de TMDB después de
+   `TMDB_ACCESS_TOKEN=`. Guarda el archivo.
+
+El comando genera 32 bytes aleatorios representados como 64 caracteres
+hexadecimales. No compartas el resultado ni subas el archivo `.env`.
+
 | Variable                  | Uso en la configuración                                                                                                                              |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `SESSION_SECRET`          | Secreto requerido para firmar las sesiones. El backend rechaza valores ausentes o menores de 32 bytes.                                               |
@@ -141,7 +190,7 @@ DATABASE_PATH=backend/data/klazia.db
 | `TMDB_ACCESS_TOKEN`       | Read Access Token usado por el backend para consultar TMDB. Se puede dejar vacío, pero las consultas al catálogo no estarán disponibles.             |
 | `TMDB_BASE_URL`           | Dirección base del API de TMDB; el valor de ejemplo coincide con el predeterminado del código.                                                       |
 | `TMDB_TIMEOUT_MS`         | Tiempo máximo de espera de las solicitudes a TMDB, expresado en milisegundos. Debe ser un entero positivo; si falta o es inválido, se usan 4.000 ms. |
-| `FRONTEND_ORIGIN`         | Origen exacto permitido por CORS y por la comprobación de origen en mutaciones.                                                                      |
+| `FRONTEND_ORIGIN`         | Dirección del frontend permitida para comunicarse con el backend.                                                                                   |
 | `PORT`                    | Puerto del backend; el valor predeterminado es 3000.                                                                                                 |
 | `DATABASE_PATH`           | Ruta de SQLite relativa a la raíz del proyecto (o absoluta si se configura así). El valor de ejemplo es `backend/data/klazia.db`.                    |
 
@@ -161,35 +210,30 @@ El archivo `.env` está excluido por `.gitignore`; no lo subas a GitHub.
 - Los archivos `.db`, `.sqlite` y sus variantes están excluidos por
   `.gitignore`; no se versionan.
 
-En un equipo nuevo, configura `backend/.env` y ejecuta la migración desde
-`backend/`. El script crea el directorio de datos si no existe, crea la base
-SQLite y aplica las migraciones versionadas:
-
-```powershell
-npm run db:migrate
-```
+En un equipo nuevo, configura `backend/.env` y ejecuta la migración como se
+explica en [Ejecución local](#ejecución-local). El script crea el directorio de
+datos si no existe, crea la base SQLite y aplica las migraciones versionadas.
 
 No se requiere copiar una base de datos local ni se debe subir una al
 repositorio.
 
 ## Ejecución local
 
-Primero, desde `backend/`, crea o actualiza el esquema:
+Abre el proyecto en VS Code y abre dos terminales de PowerShell. En cada una,
+asegúrate de empezar en la carpeta principal `klazia-filmscore`; puedes
+comprobar la ubicación con `Get-Location`.
 
-```powershell
-npm run db:migrate
-```
-
-Inicia cada servicio en una terminal separada.
-
-Terminal del backend:
+En la primera terminal, entra en `backend`, prepara la base de datos e inicia
+el servidor:
 
 ```powershell
 Set-Location backend
+npm run db:migrate
 npm start
 ```
 
-Terminal del frontend:
+En la segunda terminal, comenzando también desde la carpeta principal, entra
+en `frontend` e inicia la interfaz:
 
 ```powershell
 Set-Location frontend
@@ -205,10 +249,10 @@ no lo publica en una interfaz de red externa.
 
 ## Rutas de la API
 
-Las respuestas indicadas son las principales definidas por los controladores y
-el middleware. Las lecturas (`GET`) no requieren token CSRF. Las mutaciones
-requieren un token CSRF válido y el origen configurado; primero se obtiene el
-token mediante `GET /api/csrf-token`.
+La tabla resume las rutas de la API y sus principales respuestas. Las
+consultas (`GET`) no requieren token CSRF. Las solicitudes que crean, editan
+o eliminan datos requieren el origen configurado y un token CSRF válido, que
+se obtiene primero mediante `GET /api/csrf-token`.
 
 | Método   | Ruta                             | Acceso                     | CSRF | Propósito                                                    | Respuestas HTTP principales              |
 | -------- | -------------------------------- | -------------------------- | ---- | ------------------------------------------------------------ | ---------------------------------------- |
@@ -230,14 +274,14 @@ token mediante `GET /api/csrf-token`.
 | `DELETE` | `/api/aportes/:id`               | Sesión autenticada         | Sí   | Elimina un aporte propio.                                    | `204`, `401`, `403`, `404`, `500`        |
 
 Los errores `503` y `504` del catálogo indican indisponibilidad o timeout de
-TMDB. En las mutaciones, `403` puede indicar origen/token CSRF no válido o,
-para aportes, falta de propiedad del recurso. Los errores internos se
-responden con mensajes saneados.
+TMDB. En las solicitudes que modifican datos, `403` puede indicar un origen o
+token CSRF no válido o, para aportes, que el usuario no es el autor. Los
+mensajes de error no muestran detalles internos al usuario.
 
 ## Estructura del proyecto
 
 ```text
-FilmScore/
+klazia-filmscore/
 ├── backend/
 │   ├── src/
 │   │   ├── config/
@@ -264,40 +308,150 @@ FilmScore/
 
 ## Pruebas y controles
 
-Los manifiestos definen Vitest en backend y frontend, Supertest en backend y
-React Testing Library en frontend. Desde cada carpeta, los comandos
-disponibles son:
+El proyecto usa Vitest en backend y frontend, Supertest en backend y React
+Testing Library en frontend. Para ejecutar estos comandos, abre una terminal
+en la carpeta principal del proyecto y entra primero en `backend` o `frontend`
+con `Set-Location backend` o `Set-Location frontend`:
 
 ```powershell
 npm test
 npm run lint
 npm run format:check
-npm run format
 ```
 
-El frontend también define el build:
+`format:check` revisa el formato sin cambiar archivos. Si quieres aplicar el
+formato, ejecuta `npm run format` desde la carpeta correspondiente; este
+comando sí modifica archivos.
+
+Para generar la compilación del frontend, ejecuta desde `frontend`:
 
 ```powershell
 npm run build
 ```
 
-Ejecuta estos comandos desde `backend/` o `frontend/`, según corresponda. Este
-README documenta los comandos disponibles y no declara cantidades de pruebas
-aprobadas ni resultados de ejecución.
+Estos comandos están disponibles, pero el README no presenta resultados de
+pruebas ejecutadas.
 
 ## Capturas
 
-No se encontraron capturas de la aplicación actual fuera de los artefactos de
-prototipo; por eso no se presentan imágenes del prototipo como si fueran
-evidencia de la aplicación funcionando. Se deben agregar capturas reales,
-tomadas con datos de prueba y sin información personal, de estas vistas:
+Estas capturas corresponden a la aplicación. Se ocultaron los nombres y los
+datos de acceso visibles para proteger la privacidad.
 
-- Inicio.
-- Búsqueda con resultados.
-- Detalle de película con su calificación TMDB.
-- Favoritos de una cuenta de demostración.
-- «Mis aportes» con estados público y privado.
-- Detalle de película con un aporte público.
+### Inicio sin iniciar sesión
+
+![Pantalla de inicio de Klazia FilmScore sin sesión; la búsqueda está disponible sin crear una cuenta.](./docs/capturas-readme/01-inicio.png)
+
+La página pública presenta el buscador de películas, que puede utilizarse sin
+crear una cuenta, y la navegación hacia las demás vistas de la aplicación.
+
+### Búsqueda pública por título
+
+![Búsqueda de películas por el título After, sin iniciar sesión.](./docs/capturas-readme/02-busqueda.png)
+
+La búsqueda está disponible para una persona invitada. El campo consulta el
+catálogo por el título escrito; no busca por género, actor ni otros filtros.
+
+![Continuación de los resultados obtenidos al buscar After.](./docs/capturas-readme/03-busqueda-continuacion.png)
+
+La lista muestra coincidencias adicionales de TMDB para la misma búsqueda.
+Para abrir el detalle de una película tampoco se requiere iniciar sesión.
+
+### Detalle público y opciones privadas
+
+![Detalle de una película visible sin iniciar sesión, con información y calificación de TMDB.](./docs/capturas-readme/04-detalle.png)
+
+Las personas invitadas y las autenticadas pueden consultar el detalle de una
+película. La calificación de TMDB aparece en escala de 0 a 10.
+
+![Avisos de inicio de sesión para guardar favoritos y administrar aportes desde una vista pública.](./docs/capturas-readme/05-detalle-opciones-invitado.png)
+
+Las acciones privadas no están disponibles para invitados: guardar favoritos,
+calificar y escribir reseñas requiere crear una cuenta e iniciar sesión.
+
+### Crear una cuenta
+
+![Formulario de creación de cuenta; los valores de sus campos se ocultaron por privacidad.](./docs/capturas-readme/06-crear-cuenta.png)
+
+Una persona invitada puede registrarse con nombre visible, correo y
+contraseña. Al completar el registro, la aplicación muestra una confirmación y
+limpia la contraseña, pero no inicia sesión ni navega automáticamente al
+formulario de acceso. Para continuar, debe elegir «Iniciar sesión» en la parte
+superior derecha e ingresar el correo y la contraseña de su cuenta.
+
+### Iniciar sesión
+
+![Formulario de inicio de sesión; los valores del correo y la contraseña se ocultaron por privacidad.](./docs/capturas-readme/07-iniciar-sesion.png)
+
+La opción «Iniciar sesión» está en la parte superior derecha cuando no hay una
+sesión activa. El formulario solicita el correo y la contraseña de la cuenta.
+
+### Sesión autenticada
+
+![Encabezado con navegación privada y botón para cerrar sesión; el nombre de la cuenta se ocultó por privacidad.](./docs/capturas-readme/08-sesion-autenticada.png)
+
+Después de iniciar sesión, el encabezado ofrece «Mis Favoritos», «Mis aportes»
+y «Cerrar sesión». El espacio donde aparece el nombre visible se dejó sin
+contenido en esta captura para proteger la identidad de la cuenta.
+
+### Favorito agregado por una cuenta autenticada
+
+![Detalle de una película después de agregarla a favoritos desde una cuenta autenticada.](./docs/capturas-readme/09-detalle-favorito.png)
+
+Quien inició sesión puede guardar una película desde su detalle; la interfaz
+confirma que quedó agregada a sus favoritos.
+
+### Lista privada de favoritos
+
+![Lista privada de películas favoritas; el nombre de la cuenta del encabezado se ocultó por privacidad.](./docs/capturas-readme/10-mis-favoritos.png)
+
+La lista muestra las películas guardadas por la cuenta autenticada y permite
+abrir su detalle o retirarlas de Favoritos.
+
+![Acciones disponibles para cada película guardada: ver detalle y quitar de favoritos.](./docs/capturas-readme/11-mis-favoritos-acciones.png)
+
+Cada elemento de «Mis Favoritos» ofrece los botones «Ver detalle» y «Quitar de
+favoritos».
+
+### Mis aportes sin registros
+
+![Pantalla Mis aportes sin registros; el nombre de la cuenta se ocultó por privacidad.](./docs/capturas-readme/12-aportes-vacios.png)
+
+Cuando la cuenta aún no tiene aportes, la pantalla informa que la lista está
+vacía y ofrece una opción para buscar películas.
+
+### Crear un aporte
+
+![Formulario de creación de un aporte con calificación personal y reseña.](./docs/capturas-readme/13-crear-aporte.png)
+
+Desde el detalle de una película, quien inició sesión puede crear un aporte
+con una calificación de 1 a 5 y una reseña de 10 a 1.000 caracteres. En esa
+misma página también puede agregar la película a Favoritos; son acciones
+independientes. El aporte se crea como **privado**.
+
+![Confirmación de un aporte privado en el detalle de una película.](./docs/capturas-readme/14-aporte-privado.png)
+
+Después de guardarlo, el detalle muestra la calificación, la reseña, su estado
+privado y la opción de editar el aporte.
+
+### Editar y administrar aportes
+
+![Formulario de edición de un aporte con calificación, reseña y visibilidad.](./docs/capturas-readme/15-editar-aporte.png)
+
+El autor puede editar su calificación y reseña, y elegir si el aporte es
+privado o público.
+
+![Lista Mis aportes con las opciones de editar, volver privado y eliminar.](./docs/capturas-readme/16-administrar-aporte.png)
+
+En «Mis aportes» puede revisar sus registros, editarlos, cambiar su visibilidad
+o eliminarlos. Un aporte público también puede volver a ser privado.
+
+### Aportes públicos
+
+![Detalle de película con un aporte público visible sin iniciar sesión; el nombre del autor se ocultó por privacidad.](./docs/capturas-readme/17-aporte-publico.png)
+
+Los aportes que su autor hace públicos aparecen en el detalle de la película y
+pueden leerse sin iniciar sesión. En la aplicación se muestra el nombre visible
+del autor; en esta captura se ocultó por privacidad.
 
 ## Seguridad y privacidad
 
@@ -308,7 +462,8 @@ tomadas con datos de prueba y sin información personal, de estas vistas:
   en la configuración local HTTP actual; no se debe interpretar como una
   configuración lista para producción.
 - CORS permite el origen indicado por `FRONTEND_ORIGIN` y habilita credenciales.
-  Las mutaciones también validan el origen y el token CSRF.
+  Las solicitudes que modifican datos también validan el origen y el token
+  CSRF.
 - El token de TMDB se configura solo en el backend. Los errores públicos no
   exponen consultas SQL, credenciales ni detalles internos.
 - No subas `.env`, tokens, contraseñas, cookies de sesión ni archivos SQLite.
@@ -325,12 +480,24 @@ Estas ideas no están implementadas actualmente:
 - Completar verificaciones formales de responsive y rendimiento antes de
   afirmar resultados para esos requisitos.
 - Verificar y completar la atribución oficial de TMDB antes de publicar.
+- Redirigir al usuario al inicio de sesión después de crear su cuenta.
+- Limpiar el texto de búsqueda después de realizarla.
 
 ## Atribución de TMDB
 
 La aplicación utiliza TMDB como fuente de información sobre películas y
-calificaciones. La interfaz incluye el aviso: **«Las películas y calificaciones
-se consultan en TMDB.»** No se afirma que TMDB respalde ni certifique este
+calificaciones. Los [términos oficiales del API de TMDB](https://www.themoviedb.org/api-terms-of-use)
+requieren identificar el uso con el logotipo de TMDB, con menor prominencia
+que la identidad de la aplicación, y mostrar este aviso de forma visible:
+
+> This application uses TMDB and the TMDB APIs but is not endorsed, certified,
+> or otherwise approved by TMDB.
+
+La interfaz capturada actualmente muestra «Las películas y calificaciones se
+consultan en TMDB.», pero no se ha verificado que incluya el logotipo y el aviso
+oficial requeridos. Hay que completar y comprobar esa atribución en la
+aplicación antes de publicar las capturas o una nueva versión. Este README no
+sustituye el aviso dentro de la aplicación. TMDB no respalda ni certifica este
 proyecto.
 
 ## Autor

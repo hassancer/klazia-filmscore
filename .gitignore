@@ -1,4 +1,4 @@
-# ============================================================ 
+# ============================================================
 # KLAZIA FILMSCORE - ARCHIVOS EXCLUIDOS DE GIT
 # ============================================================
 # ------------------------------------------------------------
@@ -29,19 +29,11 @@ backend/.env.*
 # Bases de datos SQLite
 # ------------------------------------------------------------
 *.db
-*.db-journal
-*.db-shm
-*.db-wal
 *.db-*
 *.sqlite
-*.sqlite-journal
-*.sqlite-shm
-*.sqlite-wal
-*.sqlite3
-*.sqlite3-journal
-*.sqlite3-shm
-*.sqlite3-wal
 *.sqlite-*
+*.sqlite3
+*.sqlite3-*
 # Contenido local de la carpeta de datos
 /backend/data/*
 # Permitir archivo vacío para conservar la carpeta, si existe
@@ -106,10 +98,10 @@ pnpm-debug.log*
 /docs/estrategia-de-commits.md
 /docs/capturas-informe/
 # ------------------------------------------------------------
-# Capturas públicas que sí deben aparecer en el README
+# Capturas públicas del README
 # ------------------------------------------------------------
-!/docs/capturas/
-!/docs/capturas/**
+!/docs/capturas-readme/
+!/docs/capturas-readme/**
 # ------------------------------------------------------------
 # Archivos del sistema operativo
 # ------------------------------------------------------------
@@ -177,6 +169,6 @@ ehthumbs.db
 # frontend/src/
 # backend/src/
 # backend/src/database/migrations/
-# docs/capturas/
+# docs/capturas-readme/
 # Archivos de pruebas
 # ============================================================
